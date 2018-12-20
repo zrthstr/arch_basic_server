@@ -1,4 +1,4 @@
-# arch_basic_server
+# arch_server_basic
 
 ## usage
 
