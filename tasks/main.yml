@@ -1,8 +1,13 @@
 ---
 
 - name: full system upgrade
-      pacman:
-        update_cache: yes
-        upgrade: yes
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+
+- name: install standard packages
+  pacman:
+    name: "{{ packages | default(default_packages) }}"
 
 
