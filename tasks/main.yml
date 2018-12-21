@@ -11,3 +11,14 @@
     name: "{{ packages | default(default_packages) }}"
 
 
+- name:
+  stat:
+    path: /bin/zsh
+  register: zsh
+
+
+- name: set root's shell to zsh
+  user:
+    name: root
+    shell: /bin/zsh
+  when: zsh.stat.exists

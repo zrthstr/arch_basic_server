@@ -3,4 +3,5 @@ default_packages:
   - git
   - vim
   - zsh
+  - rxvt-unicode
 
