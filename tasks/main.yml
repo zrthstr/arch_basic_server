@@ -37,6 +37,14 @@
     append: yes
 
 
+- name: add ssh key
+  authorized_key:
+    user: "{{ admin_acc }}"
+    state: present
+    manage_dir: yes
+    key: "{{ lookup('file', admin_acc_pubkey) }}"
+
+
 - name: Allow wheel group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers

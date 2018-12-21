@@ -8,6 +8,8 @@
 - hosts: rand
   roles:
     - role: arch_basic_server
+      admin_acc: "some_name"
+      admin_acc: "/home/some_local_name/.ssh/id_rsa.pub"
       packages:
         - vim
         - gcc
