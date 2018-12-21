@@ -89,10 +89,10 @@
 
 - name: repair scaleways broken ssh-sftp conf
 #  perl -p -i -e 's|/usr/lib/openssh/sftp-server|/usr/lib/ssh/sftp-server|g' sshd_config
-  lineinfile:
-    dest: /etc/ssh/sshd_config
-    state: present
+  replace:
+    path: /etc/ssh/sshd_config
     regexp: '^Subsystem sftp /usr/lib/openssh/sftp-server$'
-    line: 'Subsystem sftp /usr/lib/ssh/sftp-server'
+    replace: 'Subsystem sftp /usr/lib/ssh/sftp-server'
     validate: "/usr/sbin/sshd -tf %s"
   notify: restart sshd
+
