@@ -1,35 +1,35 @@
 ---
 
-- name: full system upgrade
+- name: System | Pacman | full upgrade
   pacman:
     update_cache: yes
     upgrade: yes
 
 
-- name: install standard packages
+- name: System | Pacman | install standard packages
   pacman:
     name: "{{ packages | default(default_packages) }}"
 
 
-- name: check if zsh is present
+- name: System | Pacman | install sudo
+  pacman:
+    name: sudo
+
+
+- name: System | zsh | check if present
   stat:
     path: /bin/zsh
   register: zsh
 
 
-- name: set root's shell to zsh
+- name: User | root | shell to zsh
   user:
     name: root
     shell: /bin/zsh
   when: zsh.stat.exists
 
 
-- name: set up sudo
-  pacman:
-    name: sudo
-
-
-- name: create non root user
+- name: User | admin | create
   user:
     name: "{{ admin_acc }}"
     shell: /bin/zsh
@@ -37,7 +37,7 @@
     append: yes
 
 
-- name: add ssh key
+- name: User | admin | add pubkey
   authorized_key:
     user: "{{ admin_acc }}"
     state: present
@@ -45,7 +45,7 @@
     key: "{{ lookup('file', admin_acc_pubkey) }}"
 
 
-- name: Allow wheel group to have passwordless sudo
+- name: User | sudo | grant wheel group passwordless sudo
   lineinfile:
     dest: /etc/sudoers
     state: present
@@ -54,13 +54,13 @@
     validate: visudo -cf %s 
 
 
-- name: check if .zshrc present
+- name: User | admin | check if .zshrc present
   stat:
     path: "/home/{{ admin_acc }}/.zshrc"
   register: zshrc
 
 
-- name: touch .zshrc
+- name: User | admin | touch .zshrc
   file:
     path: "/home/{{ admin_acc }}/.zshrc"
     state: touch
@@ -70,7 +70,7 @@
   when: zshrc.stat.exists is defined and not zshrc.stat.exists
 
 
-- name: copy .vimrc
+- name: User | root | copy .vimrc
   copy:
     src: _.vimrc
     dest: "/root/.vimrc"
@@ -78,7 +78,7 @@
     group: "root"
     mode: "0600"
 
-- name: copy .vimrc
+- name: User | admin | copy .vimrc
   copy:
     src: _.vimrc
     dest: "/home/{{ admin_acc }}/.vimrc"
@@ -87,7 +87,7 @@
     mode: "0600"
 
 
-- name: sshd | repair scaleways broken ssh-sftp conf
+- name: System | sshd | repair scaleways broken ssh-sftp conf
   replace:
     path: /etc/ssh/sshd_config
     regexp: '^Subsystem sftp /usr/lib/openssh/sftp-server$'
@@ -96,7 +96,7 @@
   notify: restart sshd
 
 
-- name: sshd | disable password auth
+- name: System | sshd | disable password auth
   replace:
     path: /etc/ssh/sshd_config
     regexp: '^ChallengeResponseAuthentication yes$'
