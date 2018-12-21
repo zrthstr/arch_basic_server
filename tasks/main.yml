@@ -87,12 +87,20 @@
     mode: "0600"
 
 
-- name: repair scaleways broken ssh-sftp conf
-#  perl -p -i -e 's|/usr/lib/openssh/sftp-server|/usr/lib/ssh/sftp-server|g' sshd_config
+- name: sshd | repair scaleways broken ssh-sftp conf
   replace:
     path: /etc/ssh/sshd_config
     regexp: '^Subsystem sftp /usr/lib/openssh/sftp-server$'
     replace: 'Subsystem sftp /usr/lib/ssh/sftp-server'
+    validate: "/usr/sbin/sshd -tf %s"
+  notify: restart sshd
+
+
+- name: sshd | disable password auth
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^ChallengeResponseAuthentication yes$'
+    replace: 'ChallengeResponseAuthentication no'
     validate: "/usr/sbin/sshd -tf %s"
   notify: restart sshd
 

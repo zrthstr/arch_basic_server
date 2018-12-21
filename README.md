@@ -18,15 +18,15 @@
 ## Done
 * install default packages: zsh, git, vim
 * fix shell
+* grml-zshrc
 * create user
 * configure user
 * install sudo
 * suply pubkeys
+* secure ssh, forbid root login
+* configure vim
 
 ## TODO (no particular order):
-* zshrc
-* configure vim
-* secure ssh, forbid root login
 * aur
 * firewall
 * auto update?
