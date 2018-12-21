@@ -69,3 +69,12 @@
     mode: 0700
   when: zshrc.stat.exists is defined and not zshrc.stat.exists
 
+
+- name: copy .vimrc
+  copy:
+    src: _.vimrc
+    dest: "/home/{{ admin_acc }}/.vimrc"
+    owner: "{{ admin_acc }}"
+    group: "{{ admin_acc }}"
+    mode: "0600"
+
