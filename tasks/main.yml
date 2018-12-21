@@ -73,8 +73,26 @@
 - name: copy .vimrc
   copy:
     src: _.vimrc
+    dest: "/root/.vimrc"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+- name: copy .vimrc
+  copy:
+    src: _.vimrc
     dest: "/home/{{ admin_acc }}/.vimrc"
     owner: "{{ admin_acc }}"
     group: "{{ admin_acc }}"
     mode: "0600"
 
+
+- name: repair scaleways broken ssh-sftp conf
+#  perl -p -i -e 's|/usr/lib/openssh/sftp-server|/usr/lib/ssh/sftp-server|g' sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: '^Subsystem sftp /usr/lib/openssh/sftp-server$'
+    line: 'Subsystem sftp /usr/lib/ssh/sftp-server'
+    validate: "/usr/sbin/sshd -tf %s"
+  notify: restart sshd
