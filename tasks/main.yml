@@ -11,7 +11,7 @@
     name: "{{ packages | default(default_packages) }}"
 
 
-- name:
+- name: check if zsh is present
   stat:
     path: /bin/zsh
   register: zsh
@@ -22,3 +22,26 @@
     name: root
     shell: /bin/zsh
   when: zsh.stat.exists
+
+
+- name: set up sudo
+  pacman:
+    name: sudo
+
+
+- name: create non root user
+  user:
+    name: "{{ admin_acc }}"
+    shell: /bin/zsh
+    groups: wheel
+    append: yes
+
+
+- name: Allow wheel group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s 
+
