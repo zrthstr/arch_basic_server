@@ -53,3 +53,19 @@
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
     validate: visudo -cf %s 
 
+
+- name: check if .zshrc present
+  stat:
+    path: "/home/{{ admin_acc }}/.zshrc"
+  register: zshrc
+
+
+- name: touch .zshrc
+  file:
+    path: "/home/{{ admin_acc }}/.zshrc"
+    state: touch
+    owner: "{{ admin_acc }}"
+    group: "{{ admin_acc }}"
+    mode: 0700
+  when: zshrc.stat.exists is defined and not zshrc.stat.exists
+
