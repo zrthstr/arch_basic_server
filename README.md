@@ -1,5 +1,15 @@
 # arch_server_basic
 
+# first run
+
+for running ansible in normal mode we first need to make sure python is
+installed and some other quirks are taken care of.
+This can be done with `first_run_inline_playbook_role/first.yml` and
+should only be needed once.
+
+example: `ansible-playbook -i inventory.foo some_path/first_run_inline_playbook_role/first.yml --user=root
+
+
 ## usage
 
 ```
@@ -31,3 +41,4 @@
 * aur
 * firewall
 * auto update?
+* fix scaleway quirq: chmod 755 /usr /etc /usr/local /usr/local/sbin /usr/local/bin ...
