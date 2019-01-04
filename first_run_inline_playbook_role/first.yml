@@ -1,0 +1,17 @@
+- hosts: all
+  gather_facts: False  
+  tasks:
+
+## for some reason scaleway arch linux image has some bad/broken permissions
+## https://github.com/scaleway/image-archlinux/issues/48
+  - name: test
+    raw: chmod 755 /etc /root /usr /etc/sysctl.d /etc/systemd/ /etc/ssh/ 
+
+## this line, while seeming so is not deliberate.
+## The order of calling pacman fixses PGP issus ..
+  - name: install python if needed and distri == 'arch'
+    raw: test -e /usr/bin/python || (pacman -Sy ; pacman -S archlinux-keyring --noconfirm;\
+                                     pacman -Syu --noconfirm;\
+                                     pacman -S python --noconfirm)
+#    when: distri == 'arch'
+
